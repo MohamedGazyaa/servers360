@@ -38,6 +38,25 @@ npm run build
 npm start
 ```
 
+## MockAPI Endpoints
+
+Base URL: `https://69e3aa6e3327837a1553650d.mockapi.io/api`
+
+### Servers
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/servers` | Get all servers. Supports `?status=`, `?sortBy=`, `?order=` query params |
+| `GET` | `/servers/:id` | Get a single server by ID |
+| `POST` | `/servers` | Create a new server |
+
+### Users
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/users?email=` | Find a user by email (used for credentials login) |
+| `POST` | `/users` | Create a new user (signup) |
+
 ## Implementation Overview
 
 ### Tech Stack
