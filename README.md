@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Servers360
 
-## Getting Started
+A real-time server monitoring dashboard built with Next.js 16.
 
-First, run the development server:
+## Running the Application
+
+**1. Install dependencies**
+
+```bash
+npm install
+```
+
+**2. Set up environment variables**
+
+Create a `.env.local` file in the project root with the following:
+
+```env
+AUTH_SECRET=your_auth_secret        # generate with: openssl rand -base64 32
+AUTH_GOOGLE_ID=your_google_client_id
+AUTH_GOOGLE_SECRET=your_google_client_secret
+AUTH_GITHUB_ID=your_github_client_id
+AUTH_GITHUB_SECRET=your_github_client_secret
+MOCKAPI_BASE_URL=https://your-mockapi-url/api
+```
+
+**3. Start the development server**
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser. You will be redirected to the login page.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+**4. Build for production**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## Implementation Overview
 
-To learn more about Next.js, take a look at the following resources:
+### Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Next.js 16** (App Router) — server components, server actions, and file-based routing
+- **NextAuth v5** — authentication with credentials, Google, and GitHub providers
+- **Tailwind CSS v4** — utility-first styling
+- **MockAPI** — external REST API used as the data store
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Architecture
 
-## Deploy on Vercel
+The app uses Next.js route groups to separate concerns:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `(auth)` — login and signup pages with their own minimal layout
+- `(dashboard)` — all protected pages sharing a layout with sidebar navigation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Authentication is enforced at the layout level: the dashboard layout checks the session on the server and redirects unauthenticated users to `/login`.
+
+### Key Design Choices
+
+**Server components by default.** Data fetching (server list, server detail) happens on the server via `lib/api.js`, keeping API calls and environment variables out of the client bundle. Only interactive components (forms, sidebar, filters) are client components.
+
+**Server Actions for mutations.** The Add Server form uses a Next.js Server Action with `useActionState` for inline validation errors and loading state without a separate API route.
+
+**Location validation.** When adding a server, the city and country fields are validated against the OpenStreetMap Nominatim API server-side to confirm a real location before saving.
+
+**Responsive layout.** On desktop the sidebar is always visible. On mobile it collapses into a fixed top navbar with a burger menu that opens a slide-in drawer.
+
+**Accessibility.** All interactive elements include appropriate ARIA attributes: `role="alert"` on errors, `aria-pressed` on filter buttons, `role="dialog"` on the mobile drawer, `aria-current="page"` on active nav links, `aria-hidden` on decorative SVGs, and proper `<label>`/`id` associations on all form inputs. Stat cards use `<dl>/<dt>/<dd>` and server lists use `<ul>/<li>` for semantic markup.
+
+### Project Structure
+
+```
+src/
+├── app/
+│   ├── (auth)/          # Login and signup pages
+│   ├── (dashboard)/     # Protected dashboard pages
+│   │   ├── dashboard/   # Server list
+│   │   └── servers/     # Server detail (/[id]) and add server (/add)
+│   └── api/             # NextAuth and signup route handlers
+├── auth.js              # NextAuth configuration
+├── components/
+│   ├── auth/            # LoginForm, SignupForm
+│   ├── dashboard/       # ServerCard, ServerList, ServerDetail, Sidebar, FilterBar, AddServerForm
+│   └── ui/              # Button, Input, Spinner
+└── lib/
+    └── api.js           # MockAPI fetch helpers
+```
