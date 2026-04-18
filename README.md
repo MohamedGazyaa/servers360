@@ -73,16 +73,16 @@ Authentication is enforced at the layout level: the dashboard layout checks the 
 ```
 src/
 ├── app/
-│   ├── (auth)/          # Login and signup pages
-│   ├── (dashboard)/     # Protected dashboard pages
-│   │   ├── dashboard/   # Server list
-│   │   └── servers/     # Server detail (/[id]) and add server (/add)
-│   └── api/             # NextAuth and signup route handlers
-├── auth.js              # NextAuth configuration
+│   ├── (auth)/          
+│   ├── (dashboard)/     
+│   │   ├── dashboard/   
+│   │   └── servers/     
+│   └── api/             
+├── auth.js              
 ├── components/
-│   ├── auth/            # LoginForm, SignupForm
-│   ├── dashboard/       # ServerCard, ServerList, ServerDetail, Sidebar, FilterBar, AddServerForm
-│   └── ui/              # Button, Input, Spinner
+│   ├── auth/            
+│   ├── dashboard/       
+│   └── ui/              
 └── lib/
-    └── api.js           # MockAPI fetch helpers
+    └── api.js           
 ```
