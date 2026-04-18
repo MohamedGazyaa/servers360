@@ -1,6 +1,6 @@
 # Servers360
 
-A real-time server monitoring dashboard built with Next.js 16.
+A real-time server monitoring dashboard built with Next.js. This project is my submission for the frontend task provided by Xorithm.
 
 ## Running the Application
 
@@ -42,10 +42,10 @@ npm start
 
 ### Tech Stack
 
-- **Next.js 16** (App Router) — server components, server actions, and file-based routing
-- **NextAuth v5** — authentication with credentials, Google, and GitHub providers
-- **Tailwind CSS v4** — utility-first styling
-- **MockAPI** — external REST API used as the data store
+- **Next.js** 
+- **NextAuth** 
+- **Tailwind CSS**
+- **MockAPI** 
 
 ### Architecture
 
